@@ -43,8 +43,9 @@ app.post('/signin', (req,res) => {
 })
 
 app.post('/register', (req,res) => {
-	const { name,password,email } = req.body ;
+	const { name,password,email} = req.body ;
 	database.users.push({
+		id:'125',
 		name: name,
 		password: password,
 		email: email,
@@ -52,6 +53,20 @@ app.post('/register', (req,res) => {
 		joined: new Date()
 	})
 	res.json(database.users[database.users.length - 1]);
+})
+
+app.get('/profile/:id', (req,res) => {
+	const { id } = req.params;
+	let found = false;
+	database.users.forEach(user => {
+		if(user.id === id){
+			found = true;
+			return res.json(user)
+		}
+	})
+	if(!found){
+		res.status(404).json('not found');
+	}
 })
 
 app.listen(3000, () => {

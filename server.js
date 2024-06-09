@@ -41,6 +41,13 @@ app.get('/', (req,res) => {
 })
 
 app.post('/signin', (req,res) => {
+	// Load hash from your password DB.
+bcrypt.compare("apples", "$2a$10$WCBmwol4ZYNzkQdrZ8ryueEYn0J7bDxRAAQr5lElt1DGt9bMjAxnO", function(err, res) {
+   console.log('first guess', res);
+});
+bcrypt.compare("veggies", "$2a$10$WCBmwol4ZYNzkQdrZ8ryueEYn0J7bDxRAAQr5lElt1DGt9bMjAxnO", function(err, res) {
+     console.log('second guess', res);
+});
 	if(req.body.email === database.users[0].email &&
 	 req.body.password === database.users[0].password){
 		res.json('succes');

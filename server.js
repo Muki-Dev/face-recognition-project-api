@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const bcrypt = require('bcrypt-nodejs');
+// const bcrypt = require('bcrypt-nodejs');
 const cors = require('cors')
 
 const app = express();
@@ -44,13 +44,6 @@ app.get('/', (req,res) => {
 })
 
 app.post('/signin', (req,res) => {
-	// Load hash from your password DB.
-bcrypt.compare("apples", "$2a$10$WCBmwol4ZYNzkQdrZ8ryueEYn0J7bDxRAAQr5lElt1DGt9bMjAxnO", function(err, res) {
-   console.log('first guess', res);
-});
-bcrypt.compare("veggies", "$2a$10$WCBmwol4ZYNzkQdrZ8ryueEYn0J7bDxRAAQr5lElt1DGt9bMjAxnO", function(err, res) {
-     console.log('second guess', res);
-});
 	if(req.body.email === database.users[0].email &&
 	 req.body.password === database.users[0].password){
 		res.json('succes');
@@ -60,10 +53,6 @@ bcrypt.compare("veggies", "$2a$10$WCBmwol4ZYNzkQdrZ8ryueEYn0J7bDxRAAQr5lElt1DGt9
 })
 
 app.post('/register', (req,res) => {
-	const { name,password,email} = req.body ;
-	bcrypt.hash(password, null, null, function(err, hash) {
-     console.log(hash);
-});
 	database.users.push({
 		id:'125',
 		name: name,

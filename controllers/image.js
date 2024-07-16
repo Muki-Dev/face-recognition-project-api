@@ -1,17 +1,36 @@
-const clarifai = require('clarifai');
+const {ClarifaiStub, grpc} = require("clarifai-nodejs-grpc");
 
+const stub = ClarifaiStub.grpc();
 
- // You must add your own key from clarifai
-const app = new Clarifai.App({
- apiKey: '5cfce8461b8549f3a6f9c8817ea6b5f1'
-});
+const metadata = new grpc.Metadata();
 
+metadata.set("authorization", "Key 7f59a4752aef4e4186262e574dcd0390");
  const  handleApiCall = (req,res) => {
-	 app.models.predict('face-detection',req.body.input)
-	 .then(data => {
-	 	res.json(data)
-	 })
-	 .catch(err => res.status(400).json('Unable to work with API'))
+ 	stub.PostModelOutputs(
+    {
+        // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
+        model_id: "a403429f2ddf4b49b307e318f00e528b",
+        inputs: [{data: {image: {url: req.body.input}}}]
+    },
+    metadata,
+    (err, response) => {
+        if (err) {
+            console.log("Error: " + err);
+            return;
+        }
+
+        if (response.status.code !== 10000) {
+            console.log("Received failed status: " + response.status.description + "\n" + response.status.details);
+            return;
+        }
+
+        console.log("Predicted concepts, with confidence values:")
+        for (const c of response.outputs[0].data.concepts) {
+            console.log(c.name + ": " + c.value);
+        }
+        res.json(response);
+    }
+);
  }
 
 const imageHandler = (req,res,db) => {
